@@ -8,8 +8,14 @@
  ***************************************************************************************/
 
 // Dependencies
-import * as dayjs from "dayjs";
+import dayjs from "dayjs";
 import "dotenv/config";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+// Dayjs plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 // Environment variables
 const isDev = process.env.NODE_ENV === "development";

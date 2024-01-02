@@ -1,0 +1,28 @@
+# .github/workflows/test.yml
+
+name: Test
+
+# any tag or branch name
+on:
+  push:
+    branches: ["*"]
+    tags: ["*"]
+  pull_request:
+    branches: ["*"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container: node:18
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint and Test
+        run: |
+          export CI=TRUE
+          npm run lint:ci
