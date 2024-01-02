@@ -8,6 +8,7 @@
   "files": [
     "dist"
   ],
+  "private": false,
   "scripts": {
     "build": "tsup --cjsInterop && npx fix-tsup-cjs",
     "test": "jest --passWithNoTests",
