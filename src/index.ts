@@ -95,13 +95,10 @@ class Logger {
 
     if (isNode) {
       // Add console colors
-      switch (level) {
-        case "DEBUG":
-          timePart = CONSOLE_STYLE_FgGray + now + CONSOLE_STYLE_Reset;
-          break;
-        default:
-          timePart = CONSOLE_STYLE_FgCyan + now + CONSOLE_STYLE_Reset;
-          break;
+      if (level === "DEBUG") {
+        timePart = CONSOLE_STYLE_FgGray + now + CONSOLE_STYLE_Reset;
+      } else {
+        timePart = CONSOLE_STYLE_FgCyan + now + CONSOLE_STYLE_Reset;
       }
 
       modulePart = "[" + moduleColor + module + CONSOLE_STYLE_Reset + "]";
