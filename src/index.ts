@@ -63,11 +63,6 @@ const consoleLevelColors: Record<string, string> = {
  */
 class Logger {
   /**
-   *
-   */
-  constructor() {}
-
-  /**
    * Write a message to the log
    * @param module The module the log comes from
    * @param msg Message to write
