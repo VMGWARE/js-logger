@@ -1,5 +1,7 @@
 # @vmgware/js-logger
 
+[![Quality Gate Status](https://sonar.vmgware.dev/api/project_badges/measure?project=VMGWARE_js-logger_AYzM1fgjPR--spDn0sJW&metric=alert_status&token=sqb_45ffe2dff92598895612df73e7c3c0bb0e1d6d90)](https://sonar.vmgware.dev/dashboard?id=VMGWARE_js-logger_AYzM1fgjPR--spDn0sJW)
+
 ## Introduction
 
 A versatile logging utility, offering color-coded console outputs and various log levels, adapted from the Uptime Kuma project for broad compatibility with JavaScript applications.
