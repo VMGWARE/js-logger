@@ -31,6 +31,7 @@ import log from '@vmgware/js-logger';
 Then, use it to log messages:
 
 ```javascript
+log.getInstance("DEBUG");
 log.info('MyModule', 'This is an info message');
 log.warn('MyModule', 'This is a warning message');
 log.error('MyModule', 'This is an error message');
