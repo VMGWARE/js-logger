@@ -1,10 +1,15 @@
-import Logger from "../src/index";
+import LoggerClass from "../src/index";
 
 describe("Logger", () => {
   let consoleInfoSpy: jest.SpyInstance;
   let consoleWarnSpy: jest.SpyInstance;
   let consoleErrorSpy: jest.SpyInstance;
   let consoleDebugSpy: jest.SpyInstance;
+  let Logger: LoggerClass;
+
+  beforeAll(() => {
+    Logger = LoggerClass.getInstance("DEBUG");
+  });
 
   beforeEach(() => {
     consoleInfoSpy = jest.spyOn(console, "info");

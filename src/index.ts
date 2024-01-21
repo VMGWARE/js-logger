@@ -74,7 +74,7 @@ class Logger {
    * @description The logger class is used to write logs to the console
    * @param logLevel Log level (default: info)
    */
-  constructor(logLevel?: string) {
+  private constructor(logLevel?: string) {
     this.logLevel = logLevel ?? "INFO";
     this.logLevel = this.logLevel.toUpperCase();
   }
