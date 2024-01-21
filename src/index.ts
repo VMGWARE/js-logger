@@ -18,7 +18,6 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 // Environment variables
-const isDev = process.env.NODE_ENV === "development";
 const isNode = typeof process !== "undefined" && process?.versions?.node;
 
 // Console colors
@@ -108,6 +107,7 @@ class Logger {
       INFO: 2,
       WARN: 3,
       ERROR: 4,
+      NONE: 5,
     };
 
     if (levelPriority[level] < levelPriority[this.logLevel]) {
@@ -181,9 +181,7 @@ class Logger {
         console.info(timePart, modulePart, levelPart, msgPart);
         break;
       case "DEBUG":
-        if (isDev) {
-          console.debug(timePart, modulePart, levelPart, msgPart);
-        }
+        console.debug(timePart, modulePart, levelPart, msgPart);
         break;
       default:
         console.log(timePart, modulePart, levelPart, msgPart);
