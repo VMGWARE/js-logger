@@ -1,6 +1,50 @@
 import LoggerClass from "../src/index";
+import * as fs from "fs";
 
-describe("Logger", () => {
+jest.mock("fs", () => {
+  return {
+    createWriteStream: jest.fn().mockReturnValue({
+      write: jest.fn(),
+      end: jest.fn(),
+    }),
+  };
+});
+
+describe("Logger - File Logging", () => {
+  let consoleDebugSpy: jest.SpyInstance;
+  let fileWriteSpy: jest.SpyInstance;
+  let Logger: LoggerClass;
+  const testFilePath = "/path/to/test/logfile.log";
+
+  beforeAll(() => {
+    Logger = LoggerClass.getInstance("DEBUG", testFilePath);
+    consoleDebugSpy = jest.spyOn(console, "debug");
+    fileWriteSpy = jest.spyOn(fs.createWriteStream(testFilePath), "write");
+  });
+
+  beforeEach(() => {
+    consoleDebugSpy.mockClear();
+    fileWriteSpy.mockClear();
+  });
+
+  it("should write DEBUG message to file", () => {
+    const message = "This is a debug message.";
+    Logger.debug("TestModule", message);
+    expect(fileWriteSpy).toHaveBeenCalledWith(expect.stringContaining(message));
+  });
+
+  it("should write INFO message to file", () => {
+    const message = "This is an info message.";
+    Logger.info("TestModule", message);
+    expect(fileWriteSpy).toHaveBeenCalledWith(expect.stringContaining(message));
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
+});
+
+describe("Logger - Console Logging", () => {
   let consoleInfoSpy: jest.SpyInstance;
   let consoleWarnSpy: jest.SpyInstance;
   let consoleErrorSpy: jest.SpyInstance;

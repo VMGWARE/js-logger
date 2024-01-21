@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 import "dotenv/config";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import * as fs from "fs";
 
 // Dayjs plugins
 dayjs.extend(utc);
@@ -69,25 +70,53 @@ class Logger {
   private logLevel: string;
 
   /**
+   * Log file path
+   */
+  private logFilePath: string | null;
+
+  /**
+   * Log file stream
+   */
+  private fileStream: fs.WriteStream | null = null;
+
+  /**
    * @class Logger
    * @description The logger class is used to write logs to the console
    * @param logLevel Log level (default: info)
+   * @param logFilePath Log file path (default: null)
    */
-  private constructor(logLevel?: string) {
-    this.logLevel = logLevel ?? "INFO";
-    this.logLevel = this.logLevel.toUpperCase();
+  private constructor(logLevel: string = "INFO", logFilePath?: string) {
+    this.logLevel = logLevel.toUpperCase();
+    this.logFilePath = logFilePath ?? null;
+
+    if (this.logFilePath) {
+      // Initialize file stream only if logFilePath is provided
+      this.fileStream = fs.createWriteStream(this.logFilePath, { flags: "a" });
+    }
   }
 
   /**
    * Get the singleton instance of the logger
    * @param logLevel Log level (default: info)
+   * @param logFilePath Log file path (default: null)
    * @returns {Logger} Logger instance
    */
-  public static getInstance(logLevel?: string): Logger {
+  public static getInstance(logLevel?: string, logFilePath?: string): Logger {
     if (!Logger.instance) {
-      Logger.instance = new Logger(logLevel);
+      Logger.instance = new Logger(logLevel, logFilePath);
     }
     return Logger.instance;
+  }
+
+  /**
+   * Write a message to the log file
+   * @param message Message to write
+   * @returns {void}
+   */
+  private writeToFile(message: string): void {
+    if (this.fileStream) {
+      this.fileStream.write(message + "\n");
+    }
   }
 
   /**
@@ -187,6 +216,12 @@ class Logger {
         console.log(timePart, modulePart, levelPart, msgPart);
         break;
     }
+
+    // Format for log file
+    const formattedMessage = `${timePart} ${modulePart} ${levelPart} ${msgPart}`;
+
+    // Conditional write to file
+    this.writeToFile(formattedMessage);
   }
 
   /**
@@ -254,6 +289,16 @@ class Logger {
   setLogLevel(level: string) {
     this.logLevel = level.toUpperCase();
   }
+
+  /**
+   * Close the log file stream
+   * @returns {void}
+   */
+  close(): void {
+    if (this.fileStream) {
+      this.fileStream.end();
+    }
+  }
 }
 
 /**
@@ -271,6 +316,11 @@ function intHash(str: string, length = 10): number {
   // Normalize the hash to the range [0, 10]
   return ((hash % length) + length) % length; // Ensure the result is non-negative
 }
+
+// Handle application shutdown events to close the file stream
+process.on("exit", () => Logger.getInstance().close());
+process.on("SIGINT", () => Logger.getInstance().close());
+process.on("uncaughtException", () => Logger.getInstance().close());
 
 // Export class
 export default Logger;
