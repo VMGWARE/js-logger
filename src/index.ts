@@ -58,10 +58,22 @@ const consoleLevelColors: Record<string, string> = {
   DEBUG: CONSOLE_STYLE_FgGray,
 };
 
-/**
- * Logger class
- */
 class Logger {
+  /**
+   * Log level
+   */
+  private logLevel: string;
+
+  /**
+   * @class Logger
+   * @description The logger class is used to write logs to the console
+   * @param logLevel Log level (default: info)
+   */
+  constructor(logLevel?: string) {
+    this.logLevel = logLevel ?? "INFO";
+    this.logLevel = this.logLevel.toUpperCase();
+  }
+
   /**
    * Write a message to the log
    * @param module The module the log comes from
@@ -70,12 +82,20 @@ class Logger {
    * @returns {void}
    */
   log(module: string, msg: any, level: string) {
-    if (level === "DEBUG" && !isDev) {
-      return;
-    }
-
     module = module.toUpperCase();
     level = level.toUpperCase();
+
+    // Define levelPriority with an index signature
+    const levelPriority: { [key: string]: number } = {
+      DEBUG: 1,
+      INFO: 2,
+      WARN: 3,
+      ERROR: 4,
+    };
+
+    if (levelPriority[level] < levelPriority[this.logLevel]) {
+      return;
+    }
 
     let now;
     if (dayjs.tz) {
@@ -209,6 +229,15 @@ class Logger {
     }
 
     this.log(module, finalMessage, "error");
+  }
+
+  /**
+   * Set the log level
+   * @param level Log level
+   * @returns {void}
+   */
+  setLogLevel(level: string) {
+    this.logLevel = level.toUpperCase();
   }
 }
 
