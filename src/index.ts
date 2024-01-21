@@ -60,6 +60,11 @@ const consoleLevelColors: Record<string, string> = {
 
 class Logger {
   /**
+   * Singleton instance
+   */
+  private static instance: Logger;
+
+  /**
    * Log level
    */
   private logLevel: string;
@@ -72,6 +77,18 @@ class Logger {
   constructor(logLevel?: string) {
     this.logLevel = logLevel ?? "INFO";
     this.logLevel = this.logLevel.toUpperCase();
+  }
+
+  /**
+   * Get the singleton instance of the logger
+   * @param logLevel Log level (default: info)
+   * @returns {Logger} Logger instance
+   */
+  public static getInstance(logLevel?: string): Logger {
+    if (!Logger.instance) {
+      Logger.instance = new Logger(logLevel);
+    }
+    return Logger.instance;
   }
 
   /**
@@ -258,4 +275,4 @@ function intHash(str: string, length = 10): number {
 }
 
 // Export class
-export default new Logger();
+export default Logger;
